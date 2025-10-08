@@ -1,10 +1,22 @@
-... existing workflow ...
+name: CI Pipeline
+
+on:
+  push
 
 jobs:
   lint:
-      ... existing lint job ...
-		  
-  deploy:
+    runs-on: ubuntu-latestA
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Lint Check
+        run: npm run lint
+
+deploy:
     needs: lint
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -16,4 +28,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-			
