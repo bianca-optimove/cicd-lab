@@ -1,17 +1,19 @@
-name: CI Pipeline
-
-on:
-  push
+... existing workflow ...
 
 jobs:
   lint:
+      ... existing lint job ...
+		  
+  deploy:
+    needs: lint
     runs-on: ubuntu-latest
-
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Run Lint Check
-        run: npm run lint
+      - name: Build dist
+        run: mkdir dist && cp index.html dist/
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+			
